@@ -1,0 +1,45 @@
+project:
+  type: book
+
+book:
+  title: "Spectral Finite Element Methods"
+  author: "Vikas Sharma"
+  date: "1/24/2025"
+  chapters:
+    - index.md
+    - intro.md
+    - part: "Fourier Spectral Methods"
+      chapters:
+        - ./fourier-expansion.md
+        - ./fourier-galerkin-method.md
+        - ./fourier-collocation-method.md
+    - part: "Orthogonal polynomial"
+      chapters: 
+        - ./orthogonal-polynomials.md
+        - ./jacobi-polynomials.md
+        - ./ultraspherical-polynomials.md
+        - ./legendre-polynomials.md
+        - ./chebyshev-polynomials.md
+        - ./lobatto-polynomials.md
+    - part: "Orthogonal polynomial expansion"
+      chapters: 
+        - ./orthogonal-polynomial-expansion.md
+        - ./jacobi-polynomial-expansion.md
+        - ./ultraspherical-polynomial-expansion.md
+        - ./legendre-polynomial-expansion.md
+        - ./chebyshev-polynomial-expansion.md
+    - summary.md
+    - references.md
+
+bibliography: references.bib
+
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+  pdf:
+    documentclass: scrreprt
+
+
+
