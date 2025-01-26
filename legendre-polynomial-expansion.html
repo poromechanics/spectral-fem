@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Legendre Polynomial Expansion – Spectral Finite Element Methods</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./chebyshev-polynomial-expansion.html" rel="next">
+<link href="./ultraspherical-polynomial-expansion.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-626149efe8f5d16e1d391ba177679bf0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./orthogonal-polynomial-expansion.html">Orthogonal polynomial expansion</a></li><li class="breadcrumb-item"><a href="./legendre-polynomial-expansion.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Legendre Polynomial Expansion</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Spectral Finite Element Methods</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Fourier Spectral Methods</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./fourier-expansion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Fourier series expansion</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./fourier-galerkin-method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Fourier-Galerkin method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./fourier-collocation-method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Fourier Collocation Method</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Orthogonal polynomial</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./orthogonal-polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Orthogonal polynomials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./jacobi-polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Jacobi polynomial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ultraspherical-polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Ultraspherical polynomials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./legendre-polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Legendre polynomials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chebyshev-polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Chebyshev Polynomial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./lobatto-polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Lobatto Polynomials</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Orthogonal polynomial expansion</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./orthogonal-polynomial-expansion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Orthogonal Polynomial expansions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./jacobi-polynomial-expansion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Jacobi Polynomial Expansion</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ultraspherical-polynomial-expansion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Ultraspherical Polynomial Expansion</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./legendre-polynomial-expansion.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Legendre Polynomial Expansion</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chebyshev-polynomial-expansion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Chebyshev Polynomial Expansion</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#continuous-expansion" id="toc-continuous-expansion" class="nav-link active" data-scroll-target="#continuous-expansion">Continuous expansion</a></li>
+  <li><a href="#truncated-expansion" id="toc-truncated-expansion" class="nav-link" data-scroll-target="#truncated-expansion">Truncated expansion</a></li>
+  <li><a href="#discrete-expansion" id="toc-discrete-expansion" class="nav-link" data-scroll-target="#discrete-expansion">Discrete expansion</a></li>
+  <li><a href="#differentiation-in-physical-space" id="toc-differentiation-in-physical-space" class="nav-link" data-scroll-target="#differentiation-in-physical-space">Differentiation in physical space</a></li>
+  <li><a href="#derivative-in-frequency-space" id="toc-derivative-in-frequency-space" class="nav-link" data-scroll-target="#derivative-in-frequency-space">Derivative in frequency space</a></li>
+  <li><a href="#legendre-gauss-lobatto-expansion" id="toc-legendre-gauss-lobatto-expansion" class="nav-link" data-scroll-target="#legendre-gauss-lobatto-expansion">Legendre Gauss-Lobatto expansion</a></li>
+  <li><a href="#legendre-gauss-expansion" id="toc-legendre-gauss-expansion" class="nav-link" data-scroll-target="#legendre-gauss-expansion">Legendre Gauss Expansion</a></li>
+  <li><a href="#legendre-gauss-radau-expansion" id="toc-legendre-gauss-radau-expansion" class="nav-link" data-scroll-target="#legendre-gauss-radau-expansion">Legendre Gauss-Radau Expansion</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./orthogonal-polynomial-expansion.html">Orthogonal polynomial expansion</a></li><li class="breadcrumb-item"><a href="./legendre-polynomial-expansion.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Legendre Polynomial Expansion</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Legendre Polynomial Expansion</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="continuous-expansion" class="level2">
+<h2 class="anchored" data-anchor-id="continuous-expansion">Continuous expansion</h2>
+<p>Legendre polynomial can be obtained from Ultraspherical polynomial, by using <span class="math inline">\(\lambda=0.5\)</span>. The continuous Legendre expansion is given by</p>
+<p><span class="math display">\[
+u(x)=\sum_{n=0}^{\infty}\hat{u}_{n}P_{n}(x)
+\]</span></p>
+<p>with the following expansion coefficients,</p>
+<p><span class="math display">\[
+\hat{u}_{n}=\frac{1}{\Vert P_{n}\Vert^{2}}\int_{-1}^{+1}u(x)P_{n}(x)dx
+\]</span></p>
+<p>where,</p>
+<p><span class="math display">\[
+\Vert P_{n}\Vert^{2}=\frac{2}{2n+1}
+\]</span></p>
+<p>The <span class="math inline">\(m\)</span>th derivative of <span class="math inline">\(u(x)\)</span> has a similar expansion with coefficients <span class="math inline">\(\hat{u}_{n}^{(m)}\)</span>:</p>
+<p><span class="math display">\[
+\partial_{x}^{m}u(x)=\sum_{n=0}^{\infty}\hat{u}_{n}^{(m)}P_{n}^{(\lambda)}(x)
+\]</span></p>
+<p>The relation between <span class="math inline">\(\hat{u}_{n}\)</span> and <span class="math inline">\(\hat{u}_{n}^{(1)}\)</span> is given below:</p>
+<p><span class="math display">\[
+\hat{u}_{n}=\frac{\hat{u}_{n-1}^{(1)}}{\left(2n-1\right)}-\frac{\hat{u}_{n+1}^{(1)}}{\left(2n+3\right)}
+\]</span></p>
+<p>Similarly,</p>
+<p><span class="math display">\[
+\hat{u}_{n}^{(m-1)}=\frac{\hat{u}_{n-1}^{(m)}}{\left(2n-1\right)}-\frac{\hat{u}_{n+1}^{(m)}}{\left(2n+3\right)}
+\]</span></p>
+<p>Therefore, one can easily compute the expansion coefficient of the function from the expansion coefficients of its derivative.</p>
+</section>
+<section id="truncated-expansion" class="level2">
+<h2 class="anchored" data-anchor-id="truncated-expansion">Truncated expansion</h2>
+<p>In practice, we consider expansion of <span class="math inline">\(u(x)\)</span> by using the finite number of polynomials <span class="math inline">\(P_{n}(x)\)</span> with <span class="math inline">\(n\le N\)</span>,</p>
+<p><span class="math display">\[
+\mathcal{P}_{N}u(x)=\sum_{n=0}^{N}\hat{u}_{n}P_{n}(x)
+\]</span></p>
+<p>In this way, <span class="math inline">\(\mathcal{P}_{N}u(x)\)</span> denotes the projection of <span class="math inline">\(u(x)\)</span> on <span class="math inline">\(\mathcal{P}_{N}\)</span>, therefore, <span class="math inline">\(\hat{u}_{n}=0,\forall n&gt;N\)</span>.</p>
+<p>Let us now consider the first derivative of <span class="math inline">\(u\)</span>.</p>
+<p><span class="math display">\[
+\mathcal{P}_{N}\frac{du(x)}{dx}=\sum_{n=0}^{N}\hat{u}_{n}^{(1)}P_{n}(x),
+\]</span></p>
+<p>with <span class="math inline">\(\hat{u}_{n}^{(1)}=0,\forall n&gt;N\)</span> and <span class="math inline">\(\mathcal{P}_{N}\frac{du(x)}{dx}\in\mathcal{P}_{N-1}\)</span>. We can obtain coefficients of derivative from backward subtitution.</p>
+<p><span class="math display">\[
+\hat{u}_{n-1}^{(m)}=\left(\frac{2n-1}{2n+3}\right)\hat{u}_{n+1}^{(m)}+\left(2n-1\right)\hat{u}_{n}^{(m-1)},\text{with }\hat{u}_{N}^{(m)}=0
+\]</span></p>
+</section>
+<section id="discrete-expansion" class="level2">
+<h2 class="anchored" data-anchor-id="discrete-expansion">Discrete expansion</h2>
+<p>Let <span class="math inline">\(\left\{ x_{j},w_{j}\right\} _{j=0}^{N}\)</span> be a set of Gauss, Gauss-Radau or Gauss-Lobatto quadrature nodes and weights. The discrete Legendre polynomial expansion is given by (<em>Inverse Legendre Transform</em>):</p>
+<p><span class="math display">\[
+\mathcal{I}_{N}u(x)=\sum_{n=0}^{N}\tilde{u}_{n}P_{n}(x)
+\]</span></p>
+<p>where <span class="math inline">\(\tilde{u}_{n}\)</span> are the coefficients of discrete polynomial expansion compute by Forward Discrete Legendre Transform (or_Legendre Transform_ation):</p>
+<p><span class="math display">\[
+\tilde{u}_{n}=\frac{1}{\Vert P_{n}\Vert_{N}^{2}}\sum_{j=0}^{N}u(x_{j})P_{n}(x_{j})w_{j}
+\]</span></p>
+<ul>
+<li><p>It is noteworthy that <span class="math inline">\(\Vert P_{n}\Vert_{N}^{2}\)</span> would be exact for Gauss and Gauss-Radau quadratures, but it would be approximate for Gauss-Lobatto points.</p></li>
+<li><p><span class="math inline">\(\left\{ u(x_{j})\right\}_{j=0}^{N}\)</span> denotes value of <span class="math inline">\(u\)</span> at quadrature points, we will refer it to nodal-values in physical space, or simply nodal values of <span class="math inline">\(u\)</span>.</p></li>
+<li><p><span class="math inline">\(\left\{ \tilde{u}_{n}\right\}_{n=0}^{N}\)</span> denotes the coefficient of polynomial expansion, we will refer it to modal-values in frequency space, or simply modal values <span class="math inline">\(u\)</span>.</p></li>
+</ul>
+<p>If <span class="math inline">\(f\in\mathcal{P}_{N}\)</span> then, the <span class="math inline">\(f^{2}\in\mathcal{P}_{2N}\)</span>, therefore, <span class="math inline">\(N+1\)</span> Gauss-Quadrature points and Gauss-Radau points are enough for computing the norm. However, Gauss-Lobatto points are not enough to compute the norm. In practice, Gauss-Lobatto rules are very useful as they include boundary nodes. Thanks to following lemma we can compute the equivalent norm by using the Gauss-Lobatto points.</p>
+</section>
+<section id="differentiation-in-physical-space" class="level2">
+<h2 class="anchored" data-anchor-id="differentiation-in-physical-space">Differentiation in physical space</h2>
+<p>In the physical space, we can write the discrete Legendre expansion by using the Lagrange polynomials with interpolation points as the Gauss quadrature points <span class="math inline">\(\left\{ x_{j}\right\}_{j=0}^{N}\)</span>.</p>
+<p><span class="math display">\[
+\mathcal{I}_{N}u(x)=\sum_{j=0}^{N}u(x_{j})l_{j}(x)
+\]</span></p>
+<ul>
+<li><p>All Lagrange polynomials, <span class="math inline">\(\left\{ l_{j}(x)\right\}_{j=0}^{N}\)</span>, are <span class="math inline">\(N\)</span> order polynomials, and <span class="math inline">\(l_{j}(x_{i})=\delta_{ij}\)</span>.</p></li>
+<li><p>Lagrange polynomial depend upon the quadrature rules used in the discrete transformation.</p></li>
+</ul>
+<p>The differentiation in physical space is given by:</p>
+<p><span class="math display">\[
+\partial_{x}^{m}\mathcal{I}_{N}u(x)=\sum_{j=0}^{N}u(x_{j})\partial_{x}^{m}l_{j}(x)
+\]</span></p>
+<p>If we evaluate the derivatives at quadrature points, then</p>
+<p><span class="math display">\[
+\begin{aligned}\partial_{x}^{m}\mathcal{I}_{N}u(x_{i}) &amp; =\sum_{j=0}^{N}u(x_{j})\partial_{x}^{m}l_{j}(x_{i}),\quad i=0,\cdots,N\end{aligned}
+\]</span></p>
+<p>Consider <span class="math inline">\(m=1\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}\partial_{x}\mathcal{I}_{N}u(x_{i}) &amp; =\sum_{j=0}^{N}u(x_{j})\partial_{x}l_{j}(x_{i}),\quad i=0,\cdots,N\\
+&amp; =\sum_{j=0}^{N}u(x_{j})D_{ij}
+\end{aligned}
+\]</span></p>
+<p>where, <span class="math inline">\(D_{ij}\)</span> is called the Differentiation matrix, which is a square matrix of size <span class="math inline">\(N+1\)</span>. In the matrix-vector form:</p>
+<p><span class="math display">\[
+\frac{d{\bf u}}{dx}={\bf D}{\bf u}
+\]</span></p>
+<ul>
+<li><p>The entries of matrix <span class="math inline">\({\bf D}\)</span> depend upon the orthogonal polynomial family, and quadrature type.</p></li>
+<li><p>If the <span class="math inline">\(N+1\)</span> quadrature points are zeros of polynomial <span class="math inline">\(Q\in\mathcal{P}_{N+1}\)</span>, (<span class="math inline">\(Q\)</span> is also called the quadrature polynomial) then Lagrange polynomial and <span class="math inline">\(D_{ij}\)</span> are given by:</p></li>
+</ul>
+<p><span class="math display">\[
+l_{j}(x)=\frac{Q(x)}{\partial_{x}Q(x_{j})}\frac{1}{\left(x-x_{j}\right)},j=0,\cdots,N
+\]</span></p>
+<p><span class="math display">\[
+D_{ij}=\begin{cases}
+\frac{\partial_{x}Q(x_{i})}{\partial_{x}Q(x_{j})}\frac{1}{x_{i}-x_{j}} &amp; i\ne j\\
+\frac{\partial_{x}^{2}Q(x_{i})}{2\partial_{x}Q(x_{j})} &amp; i=j
+\end{cases}
+\]</span></p>
+<p>Quadrature polynomial <span class="math inline">\(Q\)</span> for Gauss, Gauss-Radau, and Gauss-Lobatto quadrature are given by</p>
+<p><span class="math display">\[
+Q=\begin{cases}
+P_{N+1}(x) &amp; \text{Gauss}\\
+P_{N+1}(x)-\frac{P_{N+1}(a)}{P_{N}(a)}P_{N}(x) &amp; \text{Gauss-Radau}\\
+P_{N+1}(x)+\alpha_{N}P_{N}(x)+\beta_{N}P_{N-1}(x) &amp; \text{Gauss-Lobatto}
+\end{cases}
+\]</span></p>
+<p>In the case of Gauss-Radau <span class="math inline">\(a\in\left\{ -1,1\right\} ,\)</span>and in the case of Gauss-Lobatto, <span class="math inline">\(\alpha_{N}\)</span> and <span class="math inline">\(\beta_{N}\)</span> are obtained by solving following 2×2 system of equations:</p>
+<p><span class="math display">\[
+\left[\begin{array}{cc}
+P_{N}(-1) &amp; P_{N-1}(-1)\\
+P_{N}(1) &amp; P_{N-1}(1)
+\end{array}\right]\left\{ \begin{array}{c}
+\alpha_{N}\\
+\beta_{N}
+\end{array}\right\} =-\left\{ \begin{array}{c}
+P_{N+1}(-1)\\
+P_{N+1}(+1)
+\end{array}\right\}
+\]</span></p>
+<ul>
+<li>The <span class="math inline">\(m\)</span>th order derivative of <span class="math inline">\(u\)</span> at quadrature point is given by:</li>
+</ul>
+<p><span class="math display">\[
+\frac{d^{m}{\bf u}}{dx^{m}}={\bf D}^{m}{\bf u}
+\]</span></p>
+</section>
+<section id="derivative-in-frequency-space" class="level2">
+<h2 class="anchored" data-anchor-id="derivative-in-frequency-space">Derivative in frequency space</h2>
+<p>The process of Differentiation in the frequency space is relatively simpler than that in the physical space. In the frequency space, <span class="math inline">\(\mathcal{I}_{N}u(x)\in\mathcal{P}_{N}\)</span>,</p>
+<p><span class="math display">\[
+\mathcal{I}_{N}u(x)=\sum_{n=0}^{N}\tilde{u}_{n}P_{n}(x)
+\]</span></p>
+<p>and <span class="math inline">\(\mathcal{I}_{N}\frac{d}{dx}u(x)\in P_{N-1}\)</span></p>
+<p><span class="math display">\[
+\mathcal{I}_{N}\frac{d}{dx}u(x)=\sum_{n=0}^{N}\tilde{u}_{n}\frac{d}{dx}P_{n}(x)=\sum_{n=0}^{N}\tilde{u}_{n}^{(1)}P_{n}(x)
+\]</span></p>
+<p>where, <span class="math inline">\(\tilde{u}_{n}^{(1)}\)</span> are the modal coefficients for first derivative, and <span class="math inline">\(\tilde{u}_{N}^{(1)}=0\)</span>. We can use following <strong>backward subtitution algorithm</strong> to get <span class="math inline">\(\left\{ \tilde{u}_{n}^{(1)}\right\}_{n=0}^{N}\)</span>from <span class="math inline">\(\left\{ \tilde{u}_{n}\right\}_{n=0}^{N}\)</span>:</p>
+<ol type="1">
+<li><p>Initialization: <span class="math inline">\(\tilde{u}_{N}^{(1)}=0\)</span>, <span class="math inline">\(\tilde{u}_{N-1}^{(1)}=\left(2N-1\right)\tilde{u}_{N}\)</span></p></li>
+<li><p>For <span class="math inline">\(n=N-1,\cdots,1\)</span>: <span class="math inline">\(\tilde{u}_{n-1}^{(1)}=\left(2n-1\right)\tilde{u}_{n}+\left(\frac{2n-1}{2n+3}\right)\tilde{u}_{n+1}^{(1)}\)</span></p></li>
+</ol>
+</section>
+<section id="legendre-gauss-lobatto-expansion" class="level2">
+<h2 class="anchored" data-anchor-id="legendre-gauss-lobatto-expansion">Legendre Gauss-Lobatto expansion</h2>
+<ul>
+<li>Legendre transformation</li>
+</ul>
+<p><span class="math display">\[
+\tilde{u}_{n}=\frac{1}{\Vert P_{n}\Vert_{N}^{2}}\sum_{i=0}^{N}u(x_{i})P_{n}(x_{i})w_{i}
+\]</span></p>
+<p><span class="math display">\[
+\Vert P_{n}\Vert_{N}^{2}=\begin{cases}
+\frac{2}{2n+1} &amp; n&lt;N\\
+\frac{2}{N} &amp; n=N
+\end{cases}
+\]</span></p>
+<ul>
+<li>Inverse Legendre Transformation:</li>
+</ul>
+<p><span class="math display">\[
+\mathcal{I}_{N}u(x)=\sum_{i=0}^{N}\tilde{u}_{i}P_{i}(x)
+\]</span></p>
+<p>Differentiation in physical space is performed by using <span class="math inline">\(D\)</span> matrix, which is given below.</p>
+<p><span class="math display">\[
+D_{ij}=\begin{cases}
+-\frac{N(N+1)}{4} &amp; i=j=0\\
+0 &amp; i=j\in[1,\cdots,N-1]\\
+\frac{P_{N}(x_{i})}{P_{N}(x_{j})}\frac{1}{x_{i}-x_{j}} &amp; i\ne j\\
+\frac{N(N+1)}{4} &amp; i=j=N
+\end{cases}
+\]</span></p>
+</section>
+<section id="legendre-gauss-expansion" class="level2">
+<h2 class="anchored" data-anchor-id="legendre-gauss-expansion">Legendre Gauss Expansion</h2>
+<ul>
+<li>Legendre transformation</li>
+</ul>
+<p><span class="math display">\[
+\tilde{u}_{n}=\frac{1}{\Vert P_{n}\Vert_{N}^{2}}\sum_{i=0}^{N}u(x_{i})P_{n}(x_{i})w_{i}
+\]</span></p>
+<p><span class="math display">\[
+\Vert P_{n}\Vert_{N}^{2}=\Vert P_{n}\Vert^{2}=\frac{2}{2n+1}
+\]</span></p>
+<ul>
+<li>Inverse Legendre Transformation:</li>
+</ul>
+<p><span class="math display">\[
+\mathcal{I}_{N}u(x)=\sum_{i=0}^{N}\tilde{u}_{i}P_{i}(x)
+\]</span></p>
+<p>Differentiation in physical space is performed by using <span class="math inline">\(D\)</span> matrix.</p>
+<p><span class="math display">\[
+D_{ij}=\begin{cases}
+\frac{x_{i}}{1-x_{i}^{2}} &amp; i=j\\
+\frac{1}{x_{i}-x_{j}}\frac{\partial_{x}P_{N+1}(x_{i})}{\partial_{x}P_{N+1}(x_{j})} &amp; i\ne j
+\end{cases}
+\]</span></p>
+</section>
+<section id="legendre-gauss-radau-expansion" class="level2">
+<h2 class="anchored" data-anchor-id="legendre-gauss-radau-expansion">Legendre Gauss-Radau Expansion</h2>
+<ul>
+<li>Legendre transformation</li>
+</ul>
+<p><span class="math display">\[
+\tilde{u}_{n}=\frac{1}{\Vert P_{n}\Vert_{N}^{2}}\sum_{i=0}^{N}u(x_{i})P_{n}(x_{i})w_{i}
+\]</span></p>
+<p><span class="math display">\[
+\Vert P_{n}\Vert_{N}^{2}=\Vert P_{n}\Vert^{2}=\frac{2}{2n+1}
+\]</span></p>
+<ul>
+<li>Inverse Legendre Transformation:</li>
+</ul>
+<p><span class="math display">\[
+\mathcal{I}_{N}u(x)=\sum_{i=0}^{N}\tilde{u}_{i}P_{i}(x)
+\]</span></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./ultraspherical-polynomial-expansion.html" class="pagination-link" aria-label="Ultraspherical Polynomial Expansion">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Ultraspherical Polynomial Expansion</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./chebyshev-polynomial-expansion.html" class="pagination-link" aria-label="Chebyshev Polynomial Expansion">
+        <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Chebyshev Polynomial Expansion</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
