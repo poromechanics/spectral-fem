@@ -16,7 +16,7 @@ book:
   cover-image: ./figures/cover.svg
   cover-image-alt: Spectral FEM
   twitter-card: true
-  site-url: https://vikas.easifem.com
+  site-url: https://poromechanics.github.io/spectral-fem
   page-navigation: true
   page-footer: 
     left: "Copyright 2025, Vikas Sharma" 
