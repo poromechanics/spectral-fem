@@ -7,6 +7,29 @@ book:
   author: "Vikas Sharma"
   date: "1/24/2025"
   reader-mode: true
+  search: true
+  repo-url: https://github.com/poromechanics/spectral-fem/
+  repo-actions: [edit, issue]
+  downloads: [pdf,epub]
+  sharing: [twitter, linkedin]
+  favicon: ./figures/favicon.png
+  cover-image: ./figures/cover.svg
+  cover-image-alt: Spectral FEM
+  twitter-card: true
+  site-url: https://vikas.easifem.com
+  page-navigation: true
+  page-footer: 
+    left: "Copyright 2025, Vikas Sharma" 
+    right: 
+      - icon: github
+        href: https://github.com/vickysharma0812
+      - icon: twitter
+        href: https://twitter.com/vickysharma0812
+      - icon: linkedin
+        href: https://linkedin.com/in/vickysharma0812
+  sidebar:
+      style: docked
+      background: light
   chapters:
     - index.md
     - intro.md
