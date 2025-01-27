@@ -9,6 +9,7 @@ book:
   reader-mode: true
   search: true
   repo-url: https://github.com/poromechanics/spectral-fem/
+  site-url: https://poromechanics.github.io/spectral-fem
   repo-actions: [edit, issue]
   downloads: [pdf,epub]
   sharing: [twitter, linkedin]
@@ -16,7 +17,6 @@ book:
   cover-image: ./figures/cover.svg
   cover-image-alt: Spectral FEM
   twitter-card: true
-  site-url: https://poromechanics.github.io/spectral-fem
   page-navigation: true
   page-footer: 
     left: "Copyright 2025, Vikas Sharma" 
